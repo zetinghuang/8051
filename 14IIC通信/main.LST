@@ -1,0 +1,164 @@
+C51 COMPILER V9.01   MAIN                                                                  05/23/2021 16:11:33 PAGE 1   
+
+
+C51 COMPILER V9.01, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE main.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          /**************************************************************************************
+   2          实验现象：下载程序后数码管后4位显示0，按K1保存显示的数据，按K2读取上次保存的数据，
+   3                            按K3显示数据加一，按K4显示数据清零。最大能写入的数据是255
+   4                            
+   5          接线说明： (具体接线图可见开发攻略对应实验的“实验现象”章节)
+   6                             1，单片机-->EEPROM模块
+   7                                          P20-->SDA
+   8                                          P21-->SCL
+   9                             2，单片机-->动态数码管模块
+  10                                          J22-->J6
+  11                                          P22-->J9(A)
+  12                                          P23-->J9(B)
+  13                                          P24-->J9(C)
+  14                             3，单片机-->独立按键模块
+  15                                          P30-->K2
+  16                                          P31-->K1
+  17                                          P32-->K3
+  18                                          P33-->K4        
+  19                  
+  20          注意事项：                                                                                                                                                                
+  21          ***************************************************************************************/
+  22          
+  23          #include "reg52.h"                       //此文件中定义了单片机的一些特殊功能寄存器
+  24          #include "i2c.h"
+  25                  
+  26          //#define P0    smg 
+  27          uint key_val=4;
+  28          sbit LSA=P2^2;
+  29          sbit LSB=P2^3;
+  30          sbit LSC=P2^4;
+  31          sbit key0=P3^0;
+  32          sbit key1=P3^1;
+  33          sbit key2=P3^2;
+  34          sbit key3=P3^3;
+  35             
+  36                  
+  37          uint display_data=0;
+  38          uchar addr=0x01;
+  39          uchar code smgwei[8]={0x01,0x02,0x04,0x08,0x10,0x20,0x40,0x80};
+  40          uchar code smgduan[16]={0xC0,0xF9,0xA4,0xB0,0x99,0x92,0x82,0xF8,0x80,0x90,0x88,0x83,0xC6,0xA1,0x86,0x8E};/
+             -/显示0~F的值
+  41          uchar disp[4];
+  42          
+  43          
+  44          void delay(uint i)
+  45          {
+  46   1              while(i--);
+  47   1      }
+  48          uint key_check()
+  49          {
+  50   1              while(key0||key1||key2||key3!=1)
+  51   1              {
+  52   2                      delay_10US();
+  53   2                      while(key0||key1||key2||key3!=1)
+  54   2                      {
+C51 COMPILER V9.01   MAIN                                                                  05/23/2021 16:11:33 PAGE 2   
+
+  55   3                              if(!key0)
+  56   3                                      {
+  57   4                                              key_val=0;
+  58   4                                      }
+  59   3                              if(!key1)
+  60   3                                      {
+  61   4                                              key_val=1;
+  62   4                                      }
+  63   3                              if(!key2)
+  64   3                                      {
+  65   4                                              key_val=2;
+  66   4                                      }
+  67   3                              if(!key3)
+  68   3                                      {
+  69   4                                              key_val=3;                                      
+  70   4                                      }
+  71   3                      }
+  72   2              }
+  73   1              while(!key0||!key1||!key2||!key3);      
+  74   1              return key_val;         
+  75   1      }
+  76          void data_pros()
+  77          {
+  78   1              disp[0]=smgduan[display_data/1000];
+  79   1              disp[1]=smgduan[display_data/100];
+  80   1              disp[2]=smgduan[display_data/10%10];
+  81   1              disp[3]=smgduan[display_data%10];       
+  82   1      }
+  83          void smg_change()
+  84          {
+  85   1              if(key_val==0)
+  86   1              {
+  87   2                      iic_send_data(addr, display_data);      
+  88   2              }
+  89   1              else if(key_val==1)
+  90   1              {
+  91   2                      iic_receive_data(addr);
+  92   2              }
+  93   1              else if(key_val==2)
+  94   1              {       
+  95   2                      if(display_data<255)
+  96   2                      {
+  97   3                              display_data++;
+  98   3                      }
+  99   2                      else
+ 100   2                              display_data--;
+ 101   2              }
+ 102   1              else if(key_val==3)
+ 103   1              {
+ 104   2                      display_data=0;
+ 105   2              }
+ 106   1      }
+ 107          void smg()
+ 108          {       uchar i;
+ 109   1      
+ 110   1              for(i=0;i<4;i++)
+ 111   1              {                
+ 112   2               switch(i)
+ 113   2                      {
+ 114   3                              case(0):LSA=0;LSB=0;LSC=0;break;
+ 115   3                              case(1):LSA=1;LSB=0;LSC=0;break;
+ 116   3                              case(2):LSA=0;LSB=1;LSC=0;break;
+C51 COMPILER V9.01   MAIN                                                                  05/23/2021 16:11:33 PAGE 3   
+
+ 117   3                              case(3):LSA=1;LSB=1;LSC=0;break;
+ 118   3                      }  
+ 119   2                      P0=disp[i];
+ 120   2                      delay(100);
+ 121   2                      P0=0xff;
+ 122   2              }
+ 123   1      }
+ 124          
+ 125          
+ 126          void main()
+ 127          {       
+ 128   1              while(1)
+ 129   1              {
+ 130   2                      data_pros();
+ 131   2                      smg();
+ 132   2                      key_check();
+ 133   2                      smg_change();                   
+ 134   2              }               
+ 135   1      }
+ 136          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    350    ----
+   CONSTANT SIZE    =     24    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     10    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

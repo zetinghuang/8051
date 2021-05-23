@@ -1,0 +1,16 @@
+<html>
+<body>
+<pre>
+<h1>礦ision Build Log</h1>
+<h2>Project:</h2>
+E:\51单片机\基础实验\14IIC通信\template.uvproj
+Project File Date:  04/04/2021
+
+<h2>Output:</h2>
+Build target 'Target 1'
+compiling main.c...
+compiling i2c.c...
+linking...
+Program Size: data=21.0 xdata=0 code=802
+creating hex file from "template"...
+"template" - 0 Error(s), 0 Warning(s).

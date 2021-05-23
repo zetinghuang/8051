@@ -1,0 +1,169 @@
+BL51 BANKED LINKER/LOCATER V6.22                                                        05/20/2021  02:17:50  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V6.22, INVOKED BY:
+C:\KEIL\C51\BIN\BL51.EXE main.obj TO templates RAMSIZE (256)
+
+
+MEMORY MODEL: SMALL
+
+
+INPUT MODULES INCLUDED:
+  main.obj (MAIN)
+  C:\KEIL\C51\LIB\C51S.LIB (?C_STARTUP)
+
+
+LINK MAP OF MODULE:  templates (MAIN)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+            DATA    0008H     0004H     UNIT         ?DT?MAIN
+            IDATA   000CH     0001H     UNIT         ?STACK
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     0003H     ABSOLUTE     
+                    0003H     0008H                  *** GAP ***
+            CODE    000BH     0003H     ABSOLUTE     
+            CODE    000EH     003CH     UNIT         ?PR?_SMGDIS?MAIN
+            CODE    004AH     0033H     UNIT         ?PR?MAIN?MAIN
+            CODE    007DH     0010H     UNIT         ?PR?TIMERINIT?MAIN
+            CODE    008DH     0010H     UNIT         ?CO?MAIN
+            CODE    009DH     000CH     UNIT         ?C_C51STARTUP
+            CODE    00A9H     000BH     UNIT         ?PR?_DELAY?MAIN
+            CODE    00B4H     0009H     UNIT         ?PR?TIMER0?MAIN
+
+
+
+OVERLAY MAP OF MODULE:   templates (MAIN)
+
+
+SEGMENT
+  +--> CALLED SEGMENT
+---------------------
+?C_C51STARTUP
+  +--> ?PR?MAIN?MAIN
+
+?PR?MAIN?MAIN
+  +--> ?PR?TIMERINIT?MAIN
+  +--> ?PR?_SMGDIS?MAIN
+
+?PR?_SMGDIS?MAIN
+  +--> ?CO?MAIN
+  +--> ?PR?_DELAY?MAIN
+
+
+
+SYMBOL TABLE OF MODULE:  templates (MAIN)
+
+BL51 BANKED LINKER/LOCATER V6.22                                                      05/20/2021  02:17:50  PAGE 2
+
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+
+  -------         MODULE        MAIN
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  D:0080H         PUBLIC        P0
+  D:0090H         PUBLIC        P1
+  D:00B0H         PUBLIC        P3
+  B:00A8H.7       PUBLIC        EA
+  C:000EH         PUBLIC        _smgdis
+  D:00A8H         PUBLIC        IE
+  C:00A9H         PUBLIC        _delay
+  D:00B8H         PUBLIC        IP
+  C:004AH         PUBLIC        main
+  C:00B4H         PUBLIC        Timer0
+  D:0098H         PUBLIC        SCON
+  D:0089H         PUBLIC        TMOD
+  D:0088H         PUBLIC        TCON
+  B:0090H.3       PUBLIC        led
+  C:007DH         PUBLIC        Timerinit
+  D:0008H         PUBLIC        sec
+  D:0009H         PUBLIC        shi
+  B:00A8H.1       PUBLIC        ET0
+  D:000AH         PUBLIC        ge
+  D:008CH         PUBLIC        TH0
+  D:008AH         PUBLIC        TL0
+  D:000BH         PUBLIC        num
+  B:0088H.4       PUBLIC        TR0
+  B:0090H.0       PUBLIC        LSA
+  B:0090H.1       PUBLIC        LSB
+  B:0090H.2       PUBLIC        LSC
+  D:00C8H         PUBLIC        T2CON
+  C:008DH         PUBLIC        smgduan
+  D:00D0H         PUBLIC        PSW
+  -------         PROC          _DELAY
+  D:0006H         SYMBOL        i
+  C:00A9H         LINE#         17
+  C:00A9H         LINE#         18
+  C:00A9H         LINE#         19
+  C:00B3H         LINE#         20
+  -------         ENDPROC       _DELAY
+  -------         PROC          _SMGDIS
+  D:0001H         SYMBOL        shi
+  D:0005H         SYMBOL        ge
+  -------         DO            
+  D:0002H         SYMBOL        j
+  -------         ENDDO         
+  C:000EH         LINE#         21
+  C:0010H         LINE#         22
+  C:0010H         LINE#         24
+  C:0013H         LINE#         25
+  C:0013H         LINE#         26
+  C:001DH         LINE#         27
+  C:001DH         LINE#         28
+  C:0026H         LINE#         29
+  C:0034H         LINE#         38
+  C:0034H         LINE#         39
+BL51 BANKED LINKER/LOCATER V6.22                                                      05/20/2021  02:17:50  PAGE 3
+
+
+  C:003BH         LINE#         40
+  C:003EH         LINE#         41
+  C:0049H         LINE#         42
+  -------         ENDPROC       _SMGDIS
+  -------         PROC          TIMERINIT
+  C:007DH         LINE#         45
+  C:007DH         LINE#         46
+  C:007DH         LINE#         47
+  C:0080H         LINE#         48
+  C:0083H         LINE#         49
+  C:0086H         LINE#         50
+  C:0088H         LINE#         51
+  C:008AH         LINE#         52
+  C:008CH         LINE#         53
+  -------         ENDPROC       TIMERINIT
+  -------         PROC          MAIN
+  C:004AH         LINE#         55
+  C:004AH         LINE#         56
+  C:004CH         LINE#         57
+  C:004FH         LINE#         58
+  C:004FH         LINE#         59
+  C:004FH         LINE#         60
+  C:0054H         LINE#         61
+  C:0054H         LINE#         62
+  C:0057H         LINE#         63
+  C:0059H         LINE#         64
+  C:005BH         LINE#         65
+  C:0060H         LINE#         66
+  C:0063H         LINE#         67
+  C:006BH         LINE#         68
+  C:0074H         LINE#         69
+  C:0074H         LINE#         70
+  C:007BH         LINE#         71
+  -------         ENDPROC       MAIN
+  -------         PROC          TIMER0
+  C:00B4H         LINE#         74
+  C:00B4H         LINE#         76
+  C:00B7H         LINE#         77
+  C:00BAH         LINE#         78
+  C:00BCH         LINE#         80
+  -------         ENDPROC       TIMER0
+  -------         ENDMOD        MAIN
+
+Program Size: data=13.0 xdata=0 code=181
+LINK/LOCATE RUN COMPLETE.  0 WARNING(S),  0 ERROR(S)

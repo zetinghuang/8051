@@ -1,0 +1,102 @@
+C51 COMPILER V9.01   MAIN                                                                  03/29/2021 00:18:44 PAGE 1   
+
+
+C51 COMPILER V9.01, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE main.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          
+   2          #include "reg52.h"
+   3          #include "intrins.h"                     
+   4          typedef unsigned int uint;// 16位         
+   5          typedef unsigned char uchar;//8 位
+   6          sbit SCK=P3^6;
+   7          sbit RCK=P3^5;
+   8          sbit SER=P3^4;
+   9          #define smg P1
+  10          uchar code smgduan[16]={0xC0,0xF9,0xA4,0xB0,0x99,0x92,0x82,0xF8,0x80,0x90,0x88,0x83,0xC6,0xA1,0x86,0x8E};
+  11          
+  12          void delay(uint i)
+  13          {
+  14   1              while(i--);     
+  15   1      }
+  16          
+  17          void Read595(uchar indata)
+  18          {        uchar i;
+  19   1              SCK = 1;
+  20   1              RCK = 1;
+  21   1              for(i=0;i<8;i++)
+  22   1              {
+  23   2                      SER=indata>>7;
+  24   2                      indata<<=1;
+  25   2                      SCK=0;
+  26   2                      _nop_();
+  27   2                      _nop_();
+  28   2                      SCK=1;
+  29   2              }
+  30   1              RCK=0;
+  31   1              _nop_();
+  32   1              _nop_();
+  33   1              RCK=1;
+  34   1      }
+  35          /*
+  36          void main()
+  37          {       
+  38                  uchar ledNum;
+  39          
+  40                  ledNum = ~0x01;   
+  41          
+  42                  while(1)
+  43                  {
+  44                          Read595(ledNum);
+  45                          ledNum = _crol_(ledNum, 1);
+  46                          delay(50000);
+  47                  }                       
+  48          }
+  49            */
+  50          /*静态数码管显示0-F
+  51          void main()
+  52          { uchar smgdis; uchar j;
+  53            while(1)
+  54            {     
+  55            for(j=0;j<16;j++)
+C51 COMPILER V9.01   MAIN                                                                  03/29/2021 00:18:44 PAGE 2   
+
+  56                  {       smgdis=smgduan[j];
+  57                          Read595(smgdis);
+  58                          delay(500000);
+  59                  }
+  60            }
+  61          }
+  62          */
+  63          /*动态数码管显示0-7*/
+  64          void main()
+  65           { uchar i; uchar smgwei;
+  66   1         smgwei=0x01;
+  67   1         while(1)
+  68   1         {
+  69   2               for(i=0;i<8;i++)
+  70   2                {
+  71   3                      Read595(smgwei);
+  72   3                      smg=smgduan[i];
+  73   3                      smgwei=smgwei<<i;
+  74   3                      delay(10);
+  75   3                }
+  76   2         }
+  77   1       }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     89    ----
+   CONSTANT SIZE    =     16    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

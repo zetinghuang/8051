@@ -1,0 +1,88 @@
+C51 COMPILER V9.01   MAIN                                                                  04/06/2021 15:31:41 PAGE 1   
+
+
+C51 COMPILER V9.01, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE main.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          
+   2          #include <reg52.h>                       //此文件中定义了单片机的一些特殊功能寄存器
+   3          #include <adc.h>        
+   4          #define smg P0
+   5          
+   6          sbit LSA=P2^2;
+   7          sbit LSB=P2^3;
+   8          sbit LSC=P2^4;
+   9             
+  10                  
+  11           uchar disp[4];
+  12           uchar code smgduan[16]={0xC0,0xF9,0xA4,0xB0,0x99,0x92,0x82,0xF8,0x80,0x90,0x88,0x83,0xC6,0xA1,0x86,0x8E};
+             -//显示0~F的值
+  13           //uchar code smgduan[16]={0xf9,0xb0,0xf9,0x99,0xbf,0x92,0xa4,0xC0,0x80,0x90,0x88,0x83,0xC6,0xA1,0x86,0x8E
+             -};
+  14          void delay(uint i)
+  15          {
+  16   1              while(i--);     
+  17   1      }
+  18          
+  19          void datapro()
+  20          {
+  21   1              uint temp;
+  22   1              static uchar i;
+  23   1              if(i==50)
+  24   1              {
+  25   2               i=0;
+  26   2               temp=ADCREAD(0x94);
+  27   2              }
+  28   1              i++;
+  29   1              disp[0]=smgduan[temp/1000];
+  30   1              disp[1]=smgduan[temp%1000/100];
+  31   1              disp[2]=smgduan[temp%1000%100/10];
+  32   1              disp[3]=smgduan[temp%1000%100%10];
+  33   1      }
+  34          void smgdis()
+  35          {       uchar i;
+  36   1      
+  37   1              for(i=0;i<8;i++)
+  38   1              {                
+  39   2               switch(i)
+  40   2                      {
+  41   3                              case(0):LSA=0;LSB=0;LSC=0;break;
+  42   3                              case(1):LSA=1;LSB=0;LSC=0;break;
+  43   3                              case(2):LSA=0;LSB=1;LSC=0;break;
+  44   3                              case(3):LSA=1;LSB=1;LSC=0;break;
+  45   3                              case(4):LSA=0;LSB=0;LSC=1;break;
+  46   3                      }  
+  47   2                      smg=~disp[i];
+  48   2                      delay(100);
+  49   2                      smg=0xff;
+  50   2              }
+  51   1      }
+  52          
+  53          
+C51 COMPILER V9.01   MAIN                                                                  04/06/2021 15:31:41 PAGE 2   
+
+  54          void main()
+  55          {       
+  56   1              while(1)
+  57   1              {
+  58   2                      datapro();
+  59   2                      smgdis();
+  60   2              }       
+  61   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    241    ----
+   CONSTANT SIZE    =     16    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      5       2
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

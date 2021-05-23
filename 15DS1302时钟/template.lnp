@@ -1,0 +1,4 @@
+"main.obj",
+"DS1302.obj" 
+TO "template" 
+RAMSIZE(256) 

@@ -1,0 +1,83 @@
+C51 COMPILER V9.01   MAIN                                                                  03/28/2021 22:58:06 PAGE 1   
+
+
+C51 COMPILER V9.01, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE main.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include "reg52.h"      
+   2          #include"intrins.h"              
+   3          typedef unsigned int uint;        
+   4          typedef unsigned char uchar;
+   5          sbit beep=P0^0;
+   6          sbit INPULSE=P1^5;
+   7          sbit INDATA=P1^6;
+   8          sbit CLK=P3^6;
+   9          
+  10          //uchar code smgduan[16]={0xC0,0xF9,0xA4,0xB0,0x99,0x92,0x82,0xF8,0x80,0x90,0x88,0x83,0xC6,0xA1,0x86,0x8E}
+             -;
+  11          
+  12          
+  13          void delay(uint i)
+  14          {
+  15   1              while(i--);     
+  16   1      }
+  17          
+  18          
+  19           uint Read165(void)
+  20          {       uint indata; uint i;
+  21   1              INPULSE=0;
+  22   1              _nop_();
+  23   1              INPULSE=1;
+  24   1              _nop_();
+  25   1              indata=0;
+  26   1              for(i=0;i<8;i++)
+  27   1              {
+  28   2               indata=indata<<1;
+  29   2               CLK=0;
+  30   2               _nop_();
+  31   2               indata|=INDATA;
+  32   2               CLK=1; 
+  33   2              }       
+  34   1              return(indata);
+  35   1      }
+  36          void main()
+  37          {       
+  38   1                      uint value; 
+  39   1                      while(1)
+  40   1                      {       
+  41   2                              value=Read165();
+  42   2                              if(value!=0xff)
+  43   2                              {
+  44   3                                      switch(value)
+  45   3                              {
+  46   4                                      case(0xfe):beep=~beep;delay(10);break;
+  47   4                                      case(0xfd):beep=~beep;delay(30); break;
+  48   4                                      case(0xfb):beep=~beep;delay(50);
+  49   4                                      case(0x07):beep=~beep;delay(70);
+  50   4                                      case(0xef):beep=~beep;delay(90);
+  51   4                                      case(0xdf):beep=~beep;delay(110);
+  52   4                                      case(0xbf):beep=~beep;delay(130);
+  53   4                                      case(0x70):beep=~beep;delay(150);
+  54   4                              }
+C51 COMPILER V9.01   MAIN                                                                  03/28/2021 22:58:06 PAGE 2   
+
+  55   3                              }
+  56   2                      }                       
+  57   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    168    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,4 @@
+"main.obj",
+"ADC.obj" 
+TO "template" 
+RAMSIZE(256) 
